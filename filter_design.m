@@ -7,7 +7,8 @@ btype = input('\n Enter (b) for bandpass or (l) for lowpass (h) for highpass or 
 if (btype == 'b')
     type='bandpass';
     fprintf('\n Enter the Approximation method You will use')
-    ftype = input('\n Enter (b) for Butterworth or (c) for Chebyshev : ','s');
+    ftype = input(['\n Enter (b) for Butterworth or (c) for Chebyshev,  ' ...
+                   '(i) for inverse Chebyshev, (e) for elliptic '],'s');
     if (ftype == 'b')
         fprintf('\n You choose Butterworth Approximation : ')
         order = input('\n Enter order of the filter: ');
@@ -31,13 +32,39 @@ if (btype == 'b')
         [num,denum] = cheby1(order,ripple,omega_p,type,'s');
         H = tf(num,denum)
     end
+    
+    if (ftype == 'i')
+        fprintf('\n You choose Inverse Chebyshev Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple = input('Enter ripple at stopband in dB: ');
+        f_p1 = input('Enter f_p1 at hightpass passband ');
+        f_p2 = input('Enter f_p2 at lowppass passband  ');
+        omega_p = ([f_p1 f_p2]*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = cheby2(order,ripple,omega_p,type,'s');
+        H = tf(num,denum)
+    end
+    
+    if (ftype == 'e')
+        fprintf('\n You choose elliptic Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple_p = input('Enter ripple at passband in dB: ');
+        ripple_s = input('Enter ripple at stopband in dB: ');
+        f_p1 = input('Enter f_p1 at hightpass passband ');
+        f_p2 = input('Enter f_p2 at lowppass passband  ');
+        omega_p = ([f_p1 f_p2]*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = ellip(order,ripple_p,ripple_s,omega_p,type,'s');
+        H = tf(num,denum)
+    end
 end
 
 %%%%%%% LOWPASS %%%%%%%
 if (btype == 'l')
     type='low';
     fprintf('\n Enter the Approximation method You will use')
-    ftype = input('\n Enter (b) for Butterworth or (c) for Chebyshev : ','s');
+    ftype = input(['\n Enter (b) for Butterworth or (c) for (i) for ' ...
+                   'inverse Chebyshev, (e) for elliptic and (s) for Bessel '],'s');
     if (ftype == 'b')
         fprintf('\n You choose Butterworth Approximation : ')
         order = input('\n Enter order of the filter: ');
@@ -59,13 +86,48 @@ if (btype == 'l')
         [num,denum] = cheby1(order,ripple,omega_p,type,'s');
         H = tf(num,denum)
     end
+    
+
+    if (ftype == 'i')
+        fprintf('\n You choose Inverse Chebyshev Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple = input('Enter ripple at stopband in dB: ');
+        f_p = input('Enter f_p ');
+        omega_p = (f_p*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = cheby2(order,ripple,omega_p,type,'s');
+        H = tf(num,denum)
+    end
+    
+    if (ftype == 'e')
+        fprintf('\n You choose elliptic Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple_p = input('Enter ripple at passband in dB: ');
+        ripple_s = input('Enter ripple at stopband in dB: ');
+        f_p = input('Enter f_p');
+        omega_p = (f_p*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = ellip(order,ripple_p,ripple_s,omega_p,type,'s');
+        H = tf(num,denum)
+    end
+
+    if (ftype == 's')
+        fprintf('\n You choose Bessel Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        f_p = input('Enter f_p ');
+        omega_p = (f_p*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = besself(order,omega_p);
+        H = tf(num,denum)
+    end    
 end
 
 %%%%%% HIGHPASS %%%%%%%
 if (btype == 'h')
     type='high';
     fprintf('\n Enter the Approximation method You will use')
-    ftype = input('\n Enter (b) for Butterworth or (c) for Chebyshev : ','s');
+    ftype = input(['\n Enter (b) for Butterworth or (c) for Chebyshev,  ' ...
+                   '(i) for inverse Chebyshev, (e) for elliptic '],'s');
     if (ftype == 'b')
         fprintf('\n You choose Butterworth Approximation : ')
         order = input('\n Enter order of the filter: ');
@@ -85,6 +147,29 @@ if (btype == 'h')
         omega_p = (f_p*pi*2);
         % Zero-Pole-Gain design
         [num,denum] = cheby1(order,ripple,omega_p,type,'s');
+        H = tf(num,denum)
+    end
+
+    if (ftype == 'i')
+        fprintf('\n You choose Inverse Chebyshev Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple = input('Enter ripple at stopband in dB: ');
+        f_p = input('Enter f_p ');
+        omega_p = (f_p*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = cheby2(order,ripple,omega_p,type,'s');
+        H = tf(num,denum)
+    end
+    
+    if (ftype == 'e')
+        fprintf('\n You choose elliptic Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple_p = input('Enter ripple at passband in dB: ');
+        ripple_s = input('Enter ripple at stopband in dB: ');
+        f_p = input('Enter f_p');
+        omega_p = (f_p*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = ellip(order,ripple_p,ripple_s,omega_p,type,'s');
         H = tf(num,denum)
     end
 end
@@ -94,7 +179,8 @@ end
 if (btype == 's')
     type='stop';
     fprintf('\n Enter the Approximation method You will use')
-    ftype = input('\n Enter (b) for Butterworth or (c) for Chebyshev : ','s');
+    ftype = input(['\n Enter (b) for Butterworth or (c) for Chebyshev,  ' ...
+                   '(i) for inverse Chebyshev, (e) for elliptic '],'s');
     if (ftype == 'b')
         fprintf('\n You choose Butterworth Approximation : ')
         order = input('\n Enter order of the filter: ');
@@ -116,6 +202,31 @@ if (btype == 's')
         omega_p = ([f_s1 f_s2]*pi*2);
         % Zero-Pole-Gain design
         [num,denum] = cheby1(order,ripple,omega_p,type,'s');
+        H = tf(num,denum)
+    end
+
+    if (ftype == 'i')
+        fprintf('\n You choose Inverse Chebyshev Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple = input('Enter ripple at stopband in dB: ');
+        f_s1 = input('Enter f_s1 at lowpass passband ');
+        f_s2 = input('Enter f_s2 at highpass passband  ');
+        omega_p = ([f_s1 f_s2]*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = cheby2(order,ripple,omega_p,type,'s');
+        H = tf(num,denum)
+    end
+    
+    if (ftype == 'e')
+        fprintf('\n You choose elliptic Approximation : ')
+        order = input('\nEnter order of the filter: ');
+        ripple_p = input('Enter ripple at passband in dB: ');
+        ripple_s = input('Enter ripple at stopband in dB: ');
+        f_s1 = input('Enter f_s1 at lowpass passband ');
+        f_s2 = input('Enter f_s2 at highpass passband  ');
+        omega_p = ([f_s1 f_s2]*pi*2);
+        % Zero-Pole-Gain design
+        [num,denum] = ellip(order,ripple_p,ripple_s,omega_p,type,'s');
         H = tf(num,denum)
     end
 end
